@@ -1,0 +1,99 @@
+def redlich_kwong_pressure(T, Vm, a, b, R=0.0821):
+    # Cálculo da pressão usando a equação de Redlich-Kwong
+    p = (R * T) / (Vm - b) - (a / (T**0.5 * Vm * (Vm + b)))
+    return p
+
+def convert_pressure(p_atm, target_unit):
+    conversion_factors = {
+        "Pa": 101325,
+        "bar": 1.01325,
+        "psi": 14.6959,
+        "torr": 760,
+        "kPa": 101.325
+    }
+    return p_atm * conversion_factors[target_unit]
+
+def main():
+    print("Escolha a variável de interesse para calcular usando a equação de Redlich-Kwong:")
+    print("1 - Calcular pressão (p)")
+    print("2 - Calcular volume (V)")
+    print("3 - Calcular número de moles (n)")
+    print("4 - Calcular temperatura (T)")
+    print("5 - Calcular Constante dos Gases (R)")
+    
+    choice = int(input("Escolha a variável (1-5): "))
+    
+    if choice != 1:
+        print("Somente a opção 1 (calcular pressão) está implementada neste script.")
+        return
+
+    print("\nEscolha a unidade para volume:")
+    print("1 - dm³")
+    print("2 - m³")
+    print("3 - L")
+    
+    volume_unit_choice = int(input("Escolha a unidade (1-3): "))
+    volume = float(input("Digite o valor do volume: "))
+
+    if volume_unit_choice == 1:
+        Vm = volume  # dm³ é equivalente a L
+    elif volume_unit_choice == 2:
+        Vm = volume * 1000  # m³ para L
+    elif volume_unit_choice == 3:
+        Vm = volume  # L
+    else:
+        print("Unidade de volume inválida.")
+        return
+    
+    n = float(input("Digite o valor do número de moles: "))
+    
+    print("\nEscolha a unidade para temperatura:")
+    print("1 - F°")
+    print("2 - C°")
+    print("3 - K")
+    
+    temp_unit_choice = int(input("Escolha a unidade (1-3): "))
+    temperature = float(input("Digite o valor da temperatura: "))
+
+    if temp_unit_choice == 1:
+        T = (temperature - 32) * 5/9 + 273.15  # F° para K
+    elif temp_unit_choice == 2:
+        T = temperature + 273.15  # C° para K
+    elif temp_unit_choice == 3:
+        T = temperature  # K
+    else:
+        print("Unidade de temperatura inválida.")
+        return
+
+    a = float(input("Digite o valor de a: "))
+    b = float(input("Digite o valor de b: "))
+
+    # Cálculo da pressão usando a equação de Redlich-Kwong
+    p_atm = redlich_kwong_pressure(T, Vm/n, a, b)
+    print(f"O valor de p em atm é: {p_atm:.2f}")
+
+    # Perguntar se deseja converter a pressão para outra unidade
+    convert = input("Deseja converter a pressão para outra unidade? (S/N): ").strip().upper()
+
+    if convert == 'S':
+        print("\nEscolha a unidade de conversão para a pressão:")
+        print("1 - Pa")
+        print("2 - bar")
+        print("3 - psi")
+        print("4 - torr")
+        print("5 - kPa")
+        
+        pressure_unit_choice = int(input("Escolha a unidade (1-5): "))
+        units = {1: "Pa", 2: "bar", 3: "psi", 4: "torr", 5: "kPa"}
+
+        if pressure_unit_choice in units:
+            target_unit = units[pressure_unit_choice]
+            converted_pressure = convert_pressure(p_atm, target_unit)
+            print(f"O valor de p em {target_unit} é: {converted_pressure:.2f}")
+        else:
+            print("Unidade de pressão inválida.")
+    else:
+        print("Encerrando o fluxo de trabalho.")
+
+if __name__ == "__main__":
+    main()
